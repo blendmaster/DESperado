@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang=en>
+<meta charset=utf-8>
+
+<title>DES Encrypter</title>
+
+<style>
+section {
+  display: inline-block;
+  vertical-align: top;
+}
+
+table {
+  border-spacing: 0;
+}
+
+td {
+  width: 2em;
+  height: 2em;
+  vertical-align: middle;
+  text-align: center;
+}
+
+#input td, #key td {
+  cursor: pointer;
+  -moz-user-select: -moz-none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.\30 { background-color: cadetblue }
+.\31 { background-color: mediumaquamarine }
+</style>
+
+
+<h1>DES Encrypter</h1>
+
+<p>Well, technically, it only encrypts one block. Click on a bit in the input
+  or key to swap it.
+
+<section>
+  <h1>Key</h1>
+  <p><button type=button id=zero-key>Zero</button>
+     <button type=button id=rand-key>Randomize</button>
+  <table id=key>
+    <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+  </table>
+</section>
+
+<section>
+  <h1>Input Block</h1>
+  <p><button type=button id=zero-input>Zero</button>
+     <button type=button id=rand-input>Randomize</button>
+  <table id=input>
+    <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+  </table>
+</section>
+
+<section>
+  <h1>Output Block</h1>
+  <p><button type=button>It's Output!</button>
+  <table id=output>
+    <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+  </table>
+</section>
+
+<section>
+  <h1>Key Schedule</h1>
+  <pre id=keys></pre>
+</section>
+
+<footer><small>&copy; 2012 Steven Ruppert, for Fall 2012 CSCI 475: Information
+    Security &amp; Privacy at Colorado School of Mines.</small></footer>
+
+<script src=consts.js></script>
+<script src=des.js></script>

@@ -1,0 +1,144 @@
+/* code compiled to des.js from des.co */
+
+"use strict"
+
+# [1,2,[3,4]] -> [1,2,3,4]. shallow.
+flatten = -> Array::concat.apply [], it
+
+# binary string "01010101" to numeric array [0,1,0,1]
+bits = -> Array::slice.call it .map -> parseInt it, 2
+
+# (1, 0) -> 2, (1, 0, 0) -> 4, etc
+dec = (...bits) -> parseInt bits.join(''), 2
+
+# 15 -> [1, 1, 1, 1], 3 -> [0, 0, 1, 1]
+bin4 = -> it.toString 2 |> \0 * (4 - _.length) + _ |> bits _
+
+permute = (it, indices) -> it[i - 1] for i of indices
+
+split = (it, pieces = 2) ->
+  len = Math.floor it.length / pieces
+  it.slice i, i + len for i til it.length by len
+
+left-shift = (it, times) ->
+  it.push it.shift! for i til times
+  it
+
+cons = -> Array::concat.apply [], @@
+
+xor = (a, b) -> a[i] ^ b[i] for i til a.length
+
+festiel = (it, key) ->
+  it
+  |> permute _, E
+  |> xor _, key
+  |> split _, 8
+  |> _.map (it, i) -> bin4 S[i][dec it.0, it.5][dec it.1, it.2, it.3, it.4]
+  |> flatten _
+  |> permute _, P
+
+des = (input, key) ->
+  input = permute input, IP
+  key = permute key, PC1
+
+  keys = [key]
+  for i til 16
+    keys[i + 1] = cons do
+      left-shift keys[i].slice( 0, 28), SHIFT[i]
+      left-shift keys[i].slice(28, 56), SHIFT[i]
+
+  keys.shift! # discard first key
+  keys.=map -> permute it, PC2
+  document.getElementById \keys .textContent =
+    keys
+      .map (it, i) -> "#{if i < 10 then " #i" else i}: #{it.join ' '}"
+      .join \\n
+
+  [left, right] = split input
+  for round til 16
+    [left, right] =
+      right
+      xor do
+        left
+        festiel right, keys[round]
+
+  return permute do
+    cons right, left
+    IP1
+
+# DOM stuff
+
+# 64 bits
+rand = -> Math.floor(Math.random! * 2) for i til 64
+zeroes =
+  0 0 0 0 0 0 0 0
+  0 0 0 0 0 0 0 0
+  0 0 0 0 0 0 0 0
+  0 0 0 0 0 0 0 0
+  0 0 0 0 0 0 0 0
+  0 0 0 0 0 0 0 0
+  0 0 0 0 0 0 0 0
+  0 0 0 0 0 0 0 0
+
+input = document.querySelectorAll '#input td'
+key = document.querySelectorAll '#key td'
+output = document.querySelectorAll '#output td'
+
+read = -> parseInt i.textContent, 2 for i of it
+write = !(bits, it) ->
+  for b, i of bits
+    it[i]
+      &textContent = b
+      &className = b
+
+compute = !->
+  write do
+    des do
+      read input
+      read key
+    output
+
+save = (name, it) -> localStorage["#{name}_bits"] = JSON.stringify it; it
+load = -> try JSON.parse localStorage["#{it}_bits"]
+
+# fill initially
+write do
+  load \key or rand!
+  key
+write do
+  load \input or rand!
+  input
+compute!
+
+# swap on click
+for td of document.querySelectorAll '#input td, #key td'
+  td.addEventListener \click !->
+    @textContent = if @textContent is \1 then 0 else 1
+    @className = @textContent
+    save \key read key
+    save \input read input
+    compute!
+
+document.getElementById \zero-key .addEventListener \click !->
+  write do
+    save \key zeroes
+    key
+  compute!
+
+document.getElementById \rand-key .addEventListener \click !->
+  write do
+    save \key rand!
+    key
+  compute!
+
+document.getElementById \zero-input .addEventListener \click !->
+  write do
+    save \input zeroes
+    input
+  compute!
+
+document.getElementById \rand-input .addEventListener \click !->
+  write do
+    save \input rand!
+    input
+  compute!
